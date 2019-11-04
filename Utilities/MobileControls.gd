@@ -2,6 +2,11 @@ extends Node
 var game = null
 var gameInstance = null
 var deviceResolution = OS.get_real_window_size()
+var controlScale
+var dir
+var last_dir = null
+var count = 0
+
 func _ready():
 	Global.isMobile = true
 	$ColorRect.rect_size = deviceResolution
@@ -9,15 +14,46 @@ func _ready():
 	
 	$ViewportContainer/GameViewport.set_size_override_stretch(true)
 	$ViewportContainer/GameViewport.set_size_override(true, Vector2(512,384))
-	
 	resize()
 	game = load("res://IntroScenes/Intro.tscn")
 	#game = load("res://Maps/Moki Town/HeroHome.tscn") 
-	
-	
 	gameInstance = game.instance()
 	$ViewportContainer/GameViewport.add_child(gameInstance)
 	pass
+	
+func _process(delta):
+	count += 1
+	if count == 10:
+		count = 0
+		
+		if Input.is_action_pressed("ui_touch"):
+			var event = get_viewport().get_mouse_position()
+			if !checkCostraints(false,event, $D_Pad2/TextureRect/ui_up):
+				if !checkCostraints(false,event, $D_Pad2/TextureRect/ui_down):
+					if !checkCostraints(false,event, $D_Pad2/TextureRect/ui_left):
+						checkCostraints(false,event, $D_Pad2/TextureRect/ui_right)
+		else:
+			if last_dir != null:
+				Input.action_release(last_dir)
+			last_dir = null
+			dir = null
+
+func checkCostraints(oneshot,pos,val):
+	if pos.x > val.rect_global_position.x and pos.y > val.rect_global_position.y and pos.x < val.rect_global_position.x + val.rect_size.x * controlScale and pos.y < val.rect_global_position.y + val.rect_size.y * controlScale:
+		if last_dir != null:
+			Input.action_release(last_dir)
+			
+		last_dir = val.name
+		dir = val.name
+		Input.action_press(dir)
+		if oneshot == true:
+			Input.action_release(dir)
+			
+		return 1
+	else:
+		dir = null
+		return 0
+
 func resize():
 	deviceResolution = OS.get_real_window_size()
 	#print(deviceResolution)
@@ -25,63 +61,21 @@ func resize():
 	var horizontalSize = int(round(deviceResolution.y * 1.333))
 	$ViewportContainer.rect_position = Vector2( (deviceResolution.x - horizontalSize) / 2, 0)
 	$ViewportContainer.rect_size = Vector2(horizontalSize, deviceResolution.y)
-	
-	#print(horizontalSize)
-	#print($ViewportContainer.rect_size)
-	#print($ViewportContainer.rect_position)
-	
-	var controlScale = deviceResolution.y / 3000
-	$D_Pad.position = Vector2(0, int(round(deviceResolution.y / 2)))
-	$D_Pad.scale = Vector2(controlScale, controlScale)
+	controlScale = deviceResolution.y / 3000
+	$D_Pad2.position = Vector2(0, int(round(deviceResolution.y / 2)))
+	$D_Pad2.scale = Vector2(controlScale, controlScale)
 	
 	$Buttons.position = Vector2(deviceResolution.x - int(round(1500 * controlScale))   , int(round(deviceResolution.y / 2)))
 	$Buttons.scale = Vector2(controlScale, controlScale)
 	pass
+	
+	
 func changeScene(scene):
 	gameInstance.queue_free()
 	game = load(scene)
 	gameInstance = game.instance()
 	$ViewportContainer/GameViewport.add_child(gameInstance)
 	pass
-func _on_Up_pressed():
-	Input.action_press("ui_up")
-	pass # replace with function body
-
-
-func _on_Down_pressed():
-	Input.action_press("ui_down")
-	pass # replace with function body
-
-
-func _on_Left_pressed():
-	Input.action_press("ui_left")
-	pass # replace with function body
-
-
-func _on_Right_pressed():
-	Input.action_press("ui_right")
-	pass # replace with function body
-
-
-func _on_Up_released():
-	Input.action_release("ui_up")
-	pass # replace with function body
-
-
-func _on_Down_released():
-	Input.action_release("ui_down")
-	pass # replace with function body
-
-
-func _on_Left_released():
-	Input.action_release("ui_left")
-	pass # replace with function body
-
-
-func _on_Right_released():
-	Input.action_release("ui_right")
-	pass # replace with function body
-
 
 func _on_Z_button_down():
 	Input.action_press("z")

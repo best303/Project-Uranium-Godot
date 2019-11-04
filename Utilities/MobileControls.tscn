@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Utilities/MobileControls.gd" type="Script" id=1]
 [ext_resource path="res://Utilities/GameViewport.gd" type="Script" id=2]
@@ -20,9 +20,6 @@ extents = Vector2( 250, 250 )
 [sub_resource type="RectangleShape2D" id=4]
 extents = Vector2( 250, 250 )
 
-[sub_resource type="RectangleShape2D" id=5]
-extents = Vector2( 250, 250 )
-
 [node name="MobileControls" type="Node"]
 script = ExtResource( 1 )
 
@@ -42,35 +39,36 @@ handle_input_locally = false
 render_target_update_mode = 3
 script = ExtResource( 2 )
 
-[node name="D_Pad" type="Node2D" parent="."]
-editor/display_folded = true
+[node name="D_Pad2" type="Node2D" parent="."]
 modulate = Color( 1, 1, 1, 0.588235 )
 
-[node name="TextureRect" type="TextureRect" parent="D_Pad"]
+[node name="TextureRect" type="TextureRect" parent="D_Pad2"]
 margin_right = 1500.0
 margin_bottom = 1500.0
 texture = ExtResource( 3 )
 expand = true
 
-[node name="Up" type="TouchScreenButton" parent="D_Pad"]
-position = Vector2( 750, 250 )
-shape = SubResource( 1 )
-shape_visible = false
+[node name="ui_up" type="TextureRect" parent="D_Pad2/TextureRect"]
+margin_left = 500.0
+margin_right = 1000.0
+margin_bottom = 500.0
 
-[node name="Down" type="TouchScreenButton" parent="D_Pad"]
-position = Vector2( 750, 1250 )
-shape = SubResource( 1 )
-shape_visible = false
+[node name="ui_down" type="TextureRect" parent="D_Pad2/TextureRect"]
+margin_left = 500.0
+margin_top = 1000.0
+margin_right = 1000.0
+margin_bottom = 1500.0
 
-[node name="Left" type="TouchScreenButton" parent="D_Pad"]
-position = Vector2( 250, 750 )
-shape = SubResource( 1 )
-shape_visible = false
+[node name="ui_left" type="TextureRect" parent="D_Pad2/TextureRect"]
+margin_top = 500.0
+margin_right = 500.0
+margin_bottom = 1000.0
 
-[node name="Right" type="TouchScreenButton" parent="D_Pad"]
-position = Vector2( 1250, 750 )
-shape = SubResource( 1 )
-shape_visible = false
+[node name="ui_right" type="TextureRect" parent="D_Pad2/TextureRect"]
+margin_left = 1000.0
+margin_top = 500.0
+margin_right = 1500.0
+margin_bottom = 1000.0
 
 [node name="Buttons" type="Node2D" parent="."]
 modulate = Color( 1, 1, 1, 0.588235 )
@@ -84,7 +82,7 @@ expand = true
 
 [node name="TouchScreenButton" type="TouchScreenButton" parent="Buttons/Z"]
 position = Vector2( 250, 250 )
-shape = SubResource( 2 )
+shape = SubResource( 1 )
 shape_centered = false
 shape_visible = false
 
@@ -98,7 +96,7 @@ expand = true
 
 [node name="TouchScreenButton" type="TouchScreenButton" parent="Buttons/X"]
 position = Vector2( 250, 250 )
-shape = SubResource( 3 )
+shape = SubResource( 2 )
 shape_centered = false
 shape_visible = false
 
@@ -111,7 +109,7 @@ expand = true
 
 [node name="TouchScreenButton" type="TouchScreenButton" parent="Buttons/C"]
 position = Vector2( 250, 250 )
-shape = SubResource( 4 )
+shape = SubResource( 3 )
 shape_centered = false
 shape_visible = false
 
@@ -125,17 +123,9 @@ expand = true
 
 [node name="TouchScreenButton" type="TouchScreenButton" parent="Buttons/S"]
 position = Vector2( 250, 250 )
-shape = SubResource( 5 )
+shape = SubResource( 4 )
 shape_centered = false
 shape_visible = false
-[connection signal="pressed" from="D_Pad/Up" to="." method="_on_Up_pressed"]
-[connection signal="released" from="D_Pad/Up" to="." method="_on_Up_released"]
-[connection signal="pressed" from="D_Pad/Down" to="." method="_on_Down_pressed"]
-[connection signal="released" from="D_Pad/Down" to="." method="_on_Down_released"]
-[connection signal="pressed" from="D_Pad/Left" to="." method="_on_Left_pressed"]
-[connection signal="released" from="D_Pad/Left" to="." method="_on_Left_released"]
-[connection signal="pressed" from="D_Pad/Right" to="." method="_on_Right_pressed"]
-[connection signal="released" from="D_Pad/Right" to="." method="_on_Right_released"]
 [connection signal="pressed" from="Buttons/Z/TouchScreenButton" to="." method="_on_Z_button_down"]
 [connection signal="released" from="Buttons/Z/TouchScreenButton" to="." method="_on_Z_button_up"]
 [connection signal="pressed" from="Buttons/X/TouchScreenButton" to="." method="_on_X_button_down"]
